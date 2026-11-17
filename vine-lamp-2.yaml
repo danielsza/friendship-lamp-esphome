@@ -1,0 +1,8 @@
+# Lamp 2: call lamp. Tap for breathing amber, hold for off.
+substitutions:
+  name: vine-lamp-2
+  friendly_name: "Vine Lamp 2"
+  default_tap_action: "Call"
+
+packages:
+  lamp: !include common/friendship-lamp.yaml

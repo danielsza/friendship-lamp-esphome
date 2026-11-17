@@ -1,0 +1,8 @@
+# Lamp 1: work-from-home status lamp. Tap for green (free) / red (busy), hold for off.
+substitutions:
+  name: vine-lamp
+  friendly_name: "Vine Lamp"
+  default_tap_action: "Status"
+
+packages:
+  lamp: !include common/friendship-lamp.yaml
