@@ -45,6 +45,26 @@ the data segment, and that byte is 27.
 
 Holding the pad for about 0.8 s always turns the lamp off.
 
+## Using it from the Home Assistant ESPHome add-on
+
+The add-on can pull the shared firmware straight from this repo, so each lamp only needs a few
+lines there. Add `lamp_api_key`, `lamp_ota_password` and `lamp_ap_password` to the add-on's
+secrets, then:
+
+```yaml
+substitutions:
+  name: vine-lamp-2
+  friendly_name: "Vine Lamp 2"
+  default_tap_action: "Call"
+
+packages:
+  lamp:
+    url: https://github.com/danielsza/friendship-lamp-esphome
+    ref: main
+    files: [common/friendship-lamp.yaml]
+    refresh: 0s
+```
+
 ## Flashing over serial
 
 1. Open the lamp and connect the adapter: adapter TX -> `RXD`, adapter RX -> `TXD`, GND -> `GND`.
