@@ -84,8 +84,11 @@ packages:
 ## Flashing over serial
 
 1. Open the lamp and connect the adapter: adapter TX -> `RXD`, adapter RX -> `TXD`, GND -> `GND`.
-   Power the lamp from its own USB-C cable. The pads are small and lift easily, so use thin
-   wire and little heat.
+   Power the lamp from its own USB-C cable.
+
+   **The pads lift off the board very easily.** Do not solder a whole wire to them: the weight
+   and stiffness of the wire is enough to tear a pad off. Solder just a strand or two from a
+   stranded wire, use as little heat as you can, and keep the wires from being tugged.
 2. Enter the bootloader: hold the unlabelled button, press and release RST, release the button.
 3. Back up the stock firmware first:
 
