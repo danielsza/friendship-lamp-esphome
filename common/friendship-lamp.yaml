@@ -117,7 +117,7 @@ switch:
           id: lamp_light
           brightness: 100%
           red: 100%
-          green: 45%
+          green: 71%
           blue: 0%
           effect: "Breathe"
     turn_off_action:
