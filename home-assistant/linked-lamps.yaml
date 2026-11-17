@@ -1,0 +1,106 @@
+# Home Assistant automations that link two lamps.
+#
+# Lamp 1 (tap action "Status") is the status lamp, lamp 2 (tap action "Call") is the caller:
+#   - tap or hold on lamp 1  -> lamp 2 copies lamp 1's colour, or turns off
+#   - tap on lamp 2          -> lamp 1 breathes amber (a call)
+#   - hold on lamp 2         -> the call is cancelled and lamp 1 goes back to what it showed
+#   - tap on lamp 1 in a call -> answers it (handled in the firmware), and lamp 2 follows
+#
+# Only the touch button triggers these. Colour changes made from Home Assistant, Siri or
+# anything else are not copied to the other lamp.
+#
+# Replace the entity IDs with your own. Paste each automation into the automation editor
+# (Edit in YAML), or add them to automations.yaml.
+
+- alias: "Vine lamps: lamp 1 button sets lamp 2"
+  mode: restart
+  triggers:
+    - trigger: event.received
+      target:
+        entity_id: event.office_vine_lamp_touch_gesture
+      options:
+        event_type:
+          - tap
+          - hold
+  actions:
+    - alias: Give lamp 1 a moment to report its new state
+      delay:
+        milliseconds: 700
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: light.office_vine_lamp_lamp
+              state: "on"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: light.living_room_vine_lamp_2_lamp
+              data:
+                rgb_color: "{{ state_attr('light.office_vine_lamp_lamp', 'rgb_color') }}"
+                brightness: "{{ state_attr('light.office_vine_lamp_lamp', 'brightness') | int(255) }}"
+                effect: "None"
+      default:
+        - action: light.turn_off
+          target:
+            entity_id: light.living_room_vine_lamp_2_lamp
+
+- alias: "Vine lamps: lamp 2 button calls lamp 1"
+  mode: queued
+  triggers:
+    - trigger: event.received
+      id: tap
+      target:
+        entity_id: event.living_room_vine_lamp_2_touch_gesture
+      options:
+        event_type:
+          - tap
+    - trigger: event.received
+      id: hold
+      target:
+        entity_id: event.living_room_vine_lamp_2_touch_gesture
+      options:
+        event_type:
+          - hold
+  actions:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: tap
+          sequence:
+            - alias: Remember what lamp 1 was showing, unless a call is already running
+              if:
+                - condition: state
+                  entity_id: switch.office_vine_lamp_call
+                  state: "off"
+              then:
+                - action: scene.create
+                  data:
+                    scene_id: vine_lamp_before_call
+                    snapshot_entities:
+                      - light.office_vine_lamp_lamp
+            - action: switch.turn_on
+              target:
+                entity_id: switch.office_vine_lamp_call
+        - conditions:
+            - condition: trigger
+              id: hold
+            - condition: state
+              entity_id: switch.office_vine_lamp_call
+              state: "on"
+          sequence:
+            - alias: Put lamp 1 back the way it was
+              action: scene.turn_on
+              target:
+                entity_id: scene.vine_lamp_before_call
+              continue_on_error: true
+            - delay:
+                seconds: 1
+            - alias: If the saved state was lost (for example after a restart), just end the call
+              if:
+                - condition: state
+                  entity_id: switch.office_vine_lamp_call
+                  state: "on"
+              then:
+                - action: switch.turn_off
+                  target:
+                    entity_id: switch.office_vine_lamp_call

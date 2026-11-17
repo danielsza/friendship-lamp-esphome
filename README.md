@@ -28,6 +28,8 @@ the data segment, and that byte is 27.
 - `common/friendship-lamp.yaml`: the firmware, shared by every lamp.
 - `vine-lamp.yaml`, `vine-lamp-2.yaml`: one small file per lamp (name and default tap action).
 - `secrets.yaml.example`: copy to `secrets.yaml` and fill in.
+- `home-assistant/linked-lamps.yaml`: Home Assistant automations that link two lamps.
+- `lamp_original_firmware.bin`: dump of the stock firmware, for going back.
 
 ## What you get in Home Assistant
 
@@ -43,6 +45,21 @@ the data segment, and that byte is 27.
 - **Restart** button and **Reset reason** sensor, for troubleshooting.
 
 Holding the pad for about 0.8 s always turns the lamp off.
+
+## Linking two lamps
+
+`home-assistant/linked-lamps.yaml` holds two automations that pair a status lamp with a call lamp:
+
+| Action | Lamp 1 (tap action `Status`) | Lamp 2 (tap action `Call`) |
+|---|---|---|
+| Tap lamp 1 | Green, then red on the next tap | Copies lamp 1's colour |
+| Hold lamp 1 | Off | Off |
+| Tap lamp 2 | Breathes amber (call) | Breathes amber |
+| Hold lamp 2 | Back to what it showed before the call | Off |
+| Tap lamp 1 during a call | Answers: back to its status colour | Copies that colour |
+
+Only the touch button triggers the link. A colour set from Home Assistant, Siri or an automation
+changes that lamp alone.
 
 ## Using it from the Home Assistant ESPHome add-on
 
