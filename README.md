@@ -101,4 +101,4 @@ Notes:
 - **Over-the-air updates**: the upload succeeds, but the lamp drops off the network at the
   restart and needs a power cycle. Pulling power soon after an update has ended up with the lamp
   back on its previous firmware. Cause not found yet.
-- The stock firmware is not included here. Keep your own dump if you want to go back.
+
