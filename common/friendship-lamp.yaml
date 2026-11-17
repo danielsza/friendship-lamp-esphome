@@ -169,10 +169,11 @@ binary_sensor:
         - lambda: |-
             auto mode = id(tap_action).active_index().value_or(3);
             if (mode == 0) {
-              // Status: off -> green, then green <-> red
+              // Status: off -> green, then green <-> red.
+              // A tap while the lamp is showing a call just answers it: back to the current status.
               if (!id(lamp_light).remote_values.is_on()) {
                 id(status_idx) = 0;
-              } else {
+              } else if (!id(call_switch).state) {
                 id(status_idx) = (id(status_idx) + 1) % 2;
               }
               auto call = id(lamp_light).turn_on();

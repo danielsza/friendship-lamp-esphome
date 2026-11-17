@@ -4,8 +4,7 @@ ESPHome firmware for the Loooit / FriendLamps "Friendship Lamp" touch lamp, the 
 around an ESP32-C5-MINI-1 module (the stock firmware calls it `flp_c5`). It replaces the cloud
 firmware so the lamp is a local Home Assistant light with a touch button.
 
-Status: working on one lamp (light, colour, brightness, touch). Over-the-air updates are not
-reliable yet, see Known issues.
+Status: working on two lamps (light, colour, brightness, touch, over-the-air updates).
 
 ## Hardware
 
@@ -96,9 +95,9 @@ Notes:
 - Logs: `screen /dev/cu.usbserial-0001 115200`. ESPHome logs to USB by default on the C5, which
   is why the config sets `hardware_uart: UART0`.
 
-## Known issues
+## Troubleshooting
 
-- **Over-the-air updates**: the upload succeeds, but the lamp drops off the network at the
-  restart and needs a power cycle. Pulling power soon after an update has ended up with the lamp
-  back on its previous firmware. Cause not found yet.
+- **Over-the-air updates** work. If a lamp drops off the network after an update, check the
+  WiFi details in the secrets the build used: a wrong SSID looks exactly like a failed update,
+  and pulling power within the first minute makes the lamp fall back to its previous firmware.
 
